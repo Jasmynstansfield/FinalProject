@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="comjasmynstansfield.httpsgithub.finalproject.MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iv_book_shelf"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/book_shelf"
+            android:contentDescription="shelf with books"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="10dp"/>
+
+        <TextView
+            android:id="@+id/tv_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/iv_book_shelf"
+            android:layout_margin="10dp"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:text="To add a book, enter the title and due date:" />
+
+        <EditText
+            android:id="@+id/et_book_input"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_info"
+            android:layout_margin="10dp"
+            android:hint="Enter a book title here" />
+
+        <EditText
+            android:id="@+id/et_book_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/et_book_input"
+            android:layout_alignBaseline="@id/et_book_input"
+            android:inputType="date"
+            android:hint="MM/DD/YYYY"/>
+
+        <Button
+            android:id="@+id/btn_add_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/et_book_input"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="10dp"
+            android:onClick="addBook"
+            android:text="ADD BOOK"/>
+
+        <TextView
+            android:id="@+id/tv_error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_add_book"
+            android:layout_margin="10dp"
+            android:textAlignment="center"
+            android:textColor="#CC0000"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/tv_checked_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_error_message"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:textColor="#000000"
+            android:text="Checked Out"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_below="@id/tv_checked_out"
+            android:id="@+id/fl_books_out">
+
+            <ListView
+                android:id="@+id/lv_books_out"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="NestedScrolling" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_returned"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fl_books_out"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="16dp"
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:textColor="#000000"
+            android:text="Returned"/>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="500dp"
+            android:layout_below="@id/tv_returned">
+
+            <ListView
+                android:id="@+id/lv_books_in"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="NestedScrolling" />
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</ScrollView>

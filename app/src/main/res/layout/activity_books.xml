@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="comjasmynstansfield.httpsgithub.finalproject.BooksActivity">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/tv_book_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:padding="16dp"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
+
+    <CheckBox
+        android:id="@+id/cb_renew"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_book_date"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_renewed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/cb_renew"
+        android:layout_alignBaseline="@id/cb_renew"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:text="Renewed"/>
+
+    <CheckBox
+        android:id="@+id/cb_return"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cb_renew"
+        android:layout_margin="10dp"/>
+
+    <TextView
+        android:id="@+id/tv_returned"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/cb_return"
+        android:layout_alignBaseline="@id/cb_return"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        android:text="Returned"/>
+
+    <TextView
+        android:id="@+id/tv_new_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/cb_return"
+        android:layout_margin="10dp"
+        android:textSize="18sp"
+        android:text="Enter the new return date of the renewed book:"
+        android:visibility="invisible"/>
+
+    <EditText
+        android:id="@+id/et_new_date_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_new_date"
+        android:layout_centerHorizontal="true"
+        android:hint="MM/DD/YYYY"
+        android:visibility="invisible" />
+
+</RelativeLayout>
