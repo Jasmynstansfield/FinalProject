@@ -54,6 +54,11 @@ public class Books implements Parcelable
         return inputDueDate;
     }
 
+    public void setInputDueDate(String newDate)
+    {
+        inputDueDate = newDate;
+    }
+
     @Override
     public int describeContents() {
         return 0;

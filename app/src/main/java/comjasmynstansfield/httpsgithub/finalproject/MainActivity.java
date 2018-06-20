@@ -3,7 +3,7 @@
  * Course: CS30S
  * Teacher: Mr. Hardman
  * Final Project
- * Date last modified: June 18, 2018
+ * Date last modified: June 20, 2018
  */
 
 package comjasmynstansfield.httpsgithub.finalproject;
@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,19 +28,19 @@ public class MainActivity extends AppCompatActivity
     protected static Books[] booksAddedArray = new Books[10];
     private static String[] bookNames;
 
+    private static Books[] booksReturnedArray = new Books[10];
     private static String[] returnedNames;
-    private static String toReturn;
 
     private EditText bookName;
     private EditText dueDate;
     private ListView booksAdded;
     private ListView returnedList;
-    protected static TextView errorMessage;
+    private TextView errorMessage;
 
     int elementNo;
 
     /**
-     * onCreate is the method that is run when we create an instance of thi activity
+     * onCreate is the method that is run when we create an instance of this activity
      *
      * @param savedInstanceState is a bundle object that allows the activity to
      *                           restore itself to a previously saved instance
@@ -55,12 +54,14 @@ public class MainActivity extends AppCompatActivity
 
         bookName = (EditText) findViewById(R.id.et_book_input);
         dueDate = (EditText) findViewById(R.id.et_book_date);
-        booksAdded = (ListView) findViewById(R.id.lv_books_out);
+
         errorMessage = (TextView) findViewById(R.id.tv_error_message);
+
+        booksAdded = (ListView) findViewById(R.id.lv_books_out);
         returnedList = (ListView) findViewById(R.id.lv_books_in);
 
         bookNames = new String[booksAddedArray.length];
-        returnedNames= new String[10];
+        returnedNames= new String[booksReturnedArray.length];
 
         updateListView();
 
@@ -74,30 +75,45 @@ public class MainActivity extends AppCompatActivity
                 Intent booksIntent = new Intent(MainActivity.this, BooksActivity.class);
 
                 booksIntent.putExtra("BOOK_EXTRA", booksAddedArray[position]);
+                booksIntent.putExtra("POSITION_EXTRA", position);
 
                 startActivityForResult(booksIntent, 0);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_left);
-
-
             }
         };
 
         booksAdded.setOnItemClickListener(itemClickListener);
-        returnedList.setOnItemClickListener(itemClickListener);
-
-        //onCheckPress(  );
-
-
     }
 
+    /**
+     * onActivityResult recieves data from BooksActivity
+     * @param requestCode is an integer that represents which process the new activity should run
+     * @param resultCode is an integer that represents how this activity should process the info coming from the other activity
+     * @param data is the intent used to go from the new activity back to this one
+     * @return Nothing will be returned
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == 0)
+        {
+            if( data.hasExtra("BOOK_EXTRA") )
+            {
+                booksAddedArray[data.getIntExtra("POSITION_EXTRA", 0)] = (Books)data.getExtras().get("BOOK_EXTRA");
+            }
+            else if( data.hasExtra("RETURN_EXTRA"))
+            {
+                booksReturnedArray[numBooksReturned] = booksAddedArray[data.getIntExtra("POSITION_EXTRA", 0)];
+                numBooksReturned++;
+                removeElement(booksAddedArray, data.getIntExtra("POSITION_EXTRA", 0));
+            }
+        }
     }
 
     /**
-     * updateListView
+     * updateListView will update the list of books displayed to the user in alphabetical order
      *
      * @param "" There are no parameters
      * @return Nothing will be returned
@@ -120,6 +136,11 @@ public class MainActivity extends AppCompatActivity
             bookNames[j] = booksAddedArray[j].getBookName();
         }
 
+        for (int k = 0; k < numBooksReturned; k++)
+        {
+            returnedNames[k] = booksReturnedArray[k].getBookName();
+        }
+
         //To use an array as the options for a ListView, we need an ArrayAdapter
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, bookNames);
 
@@ -127,11 +148,11 @@ public class MainActivity extends AppCompatActivity
 
         ArrayAdapter<String> arrayAdapter2 = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, returnedNames);
 
-        booksAdded.setAdapter(arrayAdapter2);
+        returnedList.setAdapter(arrayAdapter2);
     }
 
     /**
-     * addBook
+     * addBook will add the book the user inputs to the booksAddedArray
      *
      * @param vw is the view related to this method
      * @return Nothing will be returned
@@ -160,17 +181,19 @@ public class MainActivity extends AppCompatActivity
 
             updateListView();
             inputManager.hideSoftInputFromWindow(dueDate.getApplicationWindowToken(), 0 );
+            bookName.setText("");
+            dueDate.setText("");
         }
     }
 
     /**
-     * removeElement
+     * removeElement will rmove the selected book that the user renewed from the booksAddedArray
      *
-     * @param array
-     * @param removeIndex
+     * @param array in the array in which the element will be removed from
+     * @param removeIndex in the index being removed from said array
      * @return Nothing will be returned
      */
-    private static void removeElement(Books[] array, int removeIndex )
+    private void removeElement(Books[] array, int removeIndex )
     {
         for ( int i = removeIndex ; i < array.length - 1 ; i++ )
         {
@@ -178,53 +201,8 @@ public class MainActivity extends AppCompatActivity
         }
 
         numBooksAdded --;
-    }
 
-    /**
-     * onCheckPress
-     *
-     * @param vw is the view related to this method
-     * @return Nothing will be returned
-     */
-    protected void onCheckPress(View vw) {
-        boolean checked = ((CheckBox) vw).isChecked();
-
-        switch (vw.getId()) {
-            case R.id.cb_return:
-                if (checked)
-                {
-                    if( numBooksReturned == 10)
-                    {
-
-                    }
-                    else
-                    {
-
-                        for (int i = 0; i < numBooksAdded; i++)
-                        {
-                            returnedNames[i] = booksAddedArray[elementNo].getBookName();
-                        }
-
-                        removeElement(booksAddedArray, elementNo);
-
-                        numBooksReturned ++;
-                    }
-
-                    updateListView();
-                }
-                break;
-            case R.id.cb_renew:
-                if(checked)
-                {
-                     BooksActivity.bNewDate.setVisibility(View.VISIBLE);
-                     BooksActivity.bNewDateInput.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-
-                }
-                break;
-        }
+        updateListView();
     }
 
     /**

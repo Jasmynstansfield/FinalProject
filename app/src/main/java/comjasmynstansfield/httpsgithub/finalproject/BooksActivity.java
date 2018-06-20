@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,12 +19,15 @@ public class BooksActivity extends AppCompatActivity
 
     private TextView bBookName;
     private TextView bDueDate;
+    private TextView bErrorMessage;
 
-    protected static EditText bNewDateInput;
-    protected static TextView bNewDate;
+    private static EditText bNewDateInput;
+    private static TextView bNewDate;
 
     private CheckBox bRenew;
     private CheckBox bReturn;
+
+    private Books book;
 
     /**
      * onCreate is the method that is run when we create an instance of thi activity
@@ -40,12 +42,15 @@ public class BooksActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books);
 
-        Books book = (Books)getIntent().getExtras().get("BOOK_EXTRA");
+        book = (Books)getIntent().getExtras().get("BOOK_EXTRA");
 
         bBookName = (TextView) findViewById(R.id.tv_name);
         bDueDate = (TextView) findViewById(R.id.tv_book_date);
+        bErrorMessage = (TextView) findViewById(R.id.tv_error_message);
         bNewDate = (TextView) findViewById(R.id.tv_new_date);
+
         bNewDateInput = (EditText) findViewById(R.id.et_new_date_input);
+
         bRenew = (CheckBox) findViewById(R.id.cb_renew);
         bReturn = (CheckBox) findViewById(R.id.cb_return);
 
@@ -59,7 +64,30 @@ public class BooksActivity extends AppCompatActivity
     }
 
     /**
-     * onBackPressed
+     * onCheckPress will check whether the user has checked renew and allows user to input new due date
+     *
+     * @param vw is the view related to this method
+     * @return Nothing will be returned
+     *
+     */
+    public void onCheckPress(View vw) {
+
+        if (vw.getId() == R.id.cb_renew) {
+            if(bRenew.isChecked())
+            {
+                bNewDate.setVisibility(View.VISIBLE);
+                bNewDateInput.setVisibility(View.VISIBLE);
+            }
+            else
+            {
+                bNewDate.setVisibility(View.INVISIBLE);
+                bNewDateInput.setVisibility(View.INVISIBLE);
+            }
+        }
+    }
+
+    /**
+     * onBackPressed will send data back to the main activity before it switches back to that activity
      *
      * @param "" There are no parameters
      * @return Nothing will be returned
@@ -71,13 +99,24 @@ public class BooksActivity extends AppCompatActivity
 
         if( bReturn.isChecked() && bRenew.isChecked() )
         {
-            MainActivity.errorMessage.setText("You cannot check both returned and renewed. Please try again.");
+            bNewDateInput.setVisibility(View.INVISIBLE);
+            bNewDate.setVisibility(View.INVISIBLE);
+            bErrorMessage.setVisibility(View.VISIBLE);
+            bErrorMessage.setText("You cannot check both returned and renewed. Please try again.");
         }
-        else
+        else if(bRenew.isChecked() && !bReturn.isChecked())
         {
-            goBack.putExtra("RETURN_EXTRA", bReturn.isChecked() );
-            goBack.putExtra( "RENEW_EXTRA", bRenew.isChecked() );
+            bErrorMessage.setVisibility(View.INVISIBLE);
+            book.setInputDueDate(bNewDateInput.getText().toString());
+            goBack.putExtra("BOOK_EXTRA", book);
         }
+        else if(!bRenew.isChecked() && bReturn.isChecked())
+        {
+            bErrorMessage.setVisibility(View.INVISIBLE);
+            goBack.putExtra("RETURN_EXTRA", bReturn.isChecked() );
+        }
+
+        goBack.putExtra("POSITION_EXTRA", getIntent().getIntExtra("POSITION_EXTRA", 0));
 
         setResult(0, goBack );
 
